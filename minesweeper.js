@@ -49,7 +49,7 @@ function explosiveSiblingCount(position) {
     count += rightNeighborhood(position);
 
     // check cells above this one
-    if(position > dimension) {
+    if(position >= dimension) {
         count += isExplosivePosition(position - dimension) ? 1 : 0;
         count += leftNeighborhood(position - dimension);
         count += rightNeighborhood(position - dimension);
