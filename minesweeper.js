@@ -7,11 +7,11 @@ function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function initMinesweeper() {        
+function initMinesweeper() {
     var mines = [];
     var count = randomInt(1, dimension * dimension / 2);
-    for (var i = 0; i < count; i++) {
-        mines.push(randomInt(1, dimension * dimension));
+    while(mines.length < count) {
+        mines.push(randomInt(0, dimension * dimension - 1));
     }
 
     return mines;
