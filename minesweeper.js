@@ -3,6 +3,14 @@
 var dimension = 8;
 var mines = (function() { return initMinesweeper(); })();
 
+function getNumberOfMines() {
+    return mines.length
+}
+
+function setMines() {
+    mines = initMinesweeper();
+}
+
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
