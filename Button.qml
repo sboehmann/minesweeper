@@ -16,6 +16,9 @@ Item {
     property real initialStateOpacity : 0.9
     property color initialStateColor : "white"
 
+    property real flagStateOpacity : 0.8
+    property color flagStateColor : "red"
+
     property real questionStateOpacity : 0.7
     property color questionStateColor : "blue"
 
@@ -25,9 +28,9 @@ Item {
     QtObject {
         id: p;
 
-        property bool isRightButton: true;
-        property bool isExplosive: Minesweeper.isExplosivePosition(position);
-        property int explosiveSiblingCount: Minesweeper.explosiveSiblingCount(position);
+        property bool isRightButton: true
+        property bool isExplosive: Minesweeper.isExplosivePosition(position)
+        property int explosiveSiblingCount: Minesweeper.explosiveSiblingCount(position)
 
         function siblingCountButtonTextColor()
         {
@@ -96,6 +99,27 @@ Item {
                 text.text = qsTr("?")
                 text.color = questionStateColor
                 background.opacity = questionStateOpacity
+            }
+
+            SMF.SignalTransition {
+                targetState: flagState
+                signal: mousearea.onClicked
+                guard: p.isRightButton
+            }
+        }
+
+        SMF.State {
+            id: flagState
+
+            onEntered: {
+                text.text = qsTr("\u2691")
+                text.color = flagStateColor
+                background.opacity = flagStateOpacity
+                minesFound += 1
+            }
+
+            onExited: {
+                minesFound -= 1
             }
 
             SMF.SignalTransition {

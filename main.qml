@@ -12,17 +12,30 @@ Cntrls.ApplicationWindow {
     height: 500
     title: qsTr("Minesweeper")
 
+    property int minesFound: 0
+    property string minesFoundText: qsTr("Mines Found: ")
+    property string minesExistText: qsTr("Mines Exist: ")
+
+    onMinesFoundChanged: {
+        minesFoundLabel.text = minesFoundText + minesFound
+    }
+
     menuBar: Cntrls.MenuBar {
         Cntrls.Menu {
             title: "Controls"
             Cntrls.MenuItem {
                 text: "Restart"
                 onTriggered: {
+                    // redraw mineField
                     mineField.model = 0;
                     mineField.model = Minesweeper.dimension * Minesweeper.dimension;
+
+                    // reset minefield
+                    minesFound = 0;
                     Minesweeper.setMines();
+
                     gameTimer.timestamp = 0;
-                    minesFoundLabel.text = "Mines Found: " + Minesweeper.getNumberOfMines();
+                    minesExistLabel.text = minesExistText + Minesweeper.getNumberOfMines();
                 }
             }
             Cntrls.MenuItem {
@@ -70,13 +83,20 @@ Cntrls.ApplicationWindow {
                 running: true
                 repeat: true
                 triggeredOnStart: true
-                onTriggered: { timestamp += 1; time.text = "Time: " + timestamp + " sec."}
+                onTriggered: {
+                    timestamp += 1
+                    time.text = qsTr("Time: ") + timestamp + qsTr(" sec.")
+                }
             }
 
             Text {id: time}
             Cntrls.Label {
+                id: minesExistLabel
+                text: minesExistText + Minesweeper.getNumberOfMines()
+            }
+            Cntrls.Label {
                 id: minesFoundLabel
-                text: "Mines Found: " + Minesweeper.getNumberOfMines()
+                text: minesFoundText + "0"
             }
         }
     }
