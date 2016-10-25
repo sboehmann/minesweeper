@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.1
 import "minesweeper.js" as Minesweeper
 
 Cntrls.ApplicationWindow {
-    id: window
+    id: mainWindow
     visible: true
     width: 680
     height: 500
@@ -38,6 +38,17 @@ Cntrls.ApplicationWindow {
                     minesExistLabel.text = minesExistText + Minesweeper.getNumberOfMines();
                 }
             }
+
+            Cntrls.MenuItem {
+                text: "Pause"
+                shortcut: "Space"
+                onTriggered: {
+                    var pauseDialog = Qt.createComponent("PauseDialog.qml")
+                    var pauseWindow = pauseDialog.createObject(mainWindow)
+                    pauseWindow.show()
+                }
+            }
+
             Cntrls.MenuItem {
                 text: "Quit"
                 shortcut: "Ctrl+Q"
@@ -66,7 +77,7 @@ Cntrls.ApplicationWindow {
             model: table.rows *  table.columns
 
             Button {
-                width: Math.max(16, (Math.min(window.width, window.height) / table.columns) - 8)
+                width: Math.max(16, (Math.min(mainWindow.width, mainWindow.height) / table.columns) - 8)
                 height: width
                 position: modelData
             }
