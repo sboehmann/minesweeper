@@ -5,8 +5,9 @@ import QtQuick.Controls.Styles 1.4
 import QtQml.StateMachine 1.0 as SMF
 
 import "minesweeper.js" as Minesweeper
+import "."
 
-Item {
+Item {    
     property int position: 0
 
     property alias backgroundColor : background.color
@@ -176,7 +177,7 @@ Item {
                 text.color = explodedStateColor
                 background.opacity = explodedStateOpacity
                 explodeStateAnimator.running = true
-
+                GlobalData.isGameOver = true
             }
         }
 
@@ -224,10 +225,14 @@ Item {
     MouseArea {
         id: mousearea;
         anchors.fill: parent
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        acceptedButtons: Qt.AllButtons
 
         onClicked: {
             p.isRightButton = mouse.button == Qt.RightButton
+
+            if(mouse.button === Qt.MiddleButton) {
+                console.log("Middle mouse is clicked!")
+            }
         }
     }
 

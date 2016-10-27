@@ -4,6 +4,7 @@ import QtQuick.Controls 1.4 as Cntrls
 import QtQuick.Layouts 1.1
 
 import "minesweeper.js" as Minesweeper
+import "."
 
 Cntrls.ApplicationWindow {
     id: mainWindow
@@ -13,6 +14,7 @@ Cntrls.ApplicationWindow {
     title: qsTr("Minesweeper")
 
     property int minesFound: 0
+    property bool isGameOver: GlobalData.isGameOver
     property string minesFoundText: qsTr("Mines Found: ")
     property string minesExistText: qsTr("Mines Exist: ")
 
@@ -20,17 +22,11 @@ Cntrls.ApplicationWindow {
         minesFoundLabel.text = minesFoundText + minesFound
     }
 
-    Loader {
-        id: pauseDialogLoader
-        source: "PauseDialog.qml"
-        active: false
-    }
-
-    Connections {
-        target: pauseDialogLoader.item
-        onAccepted: {
-            gameTimer.start()
-            pauseDialogLoader.active = false
+    onIsGameOverChanged: {
+        if(isGameOver) {
+            gameTimer.stop()
+            customDialog.state = "gameover"
+            customDialog.visible = true
         }
     }
 
@@ -40,6 +36,10 @@ Cntrls.ApplicationWindow {
             Cntrls.MenuItem {
                 text: "Restart"
                 onTriggered: {
+                    // hide custom dialog, in case of game over
+                    customDialog.state = "default"
+                    customDialog.visible = false
+
                     // redraw mineField
                     mineField.model = 0;
                     mineField.model = Minesweeper.dimension * Minesweeper.dimension;
@@ -48,6 +48,7 @@ Cntrls.ApplicationWindow {
                     minesFound = 0;
                     Minesweeper.setMines();
 
+                    GlobalData.isGameOver = false;
                     gameTimer.timestamp = 0;
                     minesExistLabel.text = minesExistText + Minesweeper.getNumberOfMines();
                 }
@@ -57,8 +58,15 @@ Cntrls.ApplicationWindow {
                 text: "Pause"
                 shortcut: "Space"
                 onTriggered: {
-                    gameTimer.stop()
-                    pauseDialogLoader.active = true
+                    if(customDialog.state === "gameover") return
+                    customDialog.state = "pause"
+                    customDialog.visible = !customDialog.visible
+                    if(customDialog.visible) {
+                        gameTimer.stop()
+                    } else {
+                        gameTimer.start()
+                    }
+
                 }
             }
 
@@ -90,6 +98,7 @@ Cntrls.ApplicationWindow {
             model: table.rows *  table.columns
 
             Button {
+                id: mineCell
                 width: Math.max(16, (Math.min(mainWindow.width, mainWindow.height) / table.columns) - 8)
                 height: width
                 position: modelData
@@ -123,5 +132,11 @@ Cntrls.ApplicationWindow {
                 text: minesFoundText + "0"
             }
         }
+    }
+
+    CustomDialog {
+        id: customDialog
+        visible: false
+        anchors.fill: parent
     }
 }
