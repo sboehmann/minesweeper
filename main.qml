@@ -20,6 +20,20 @@ Cntrls.ApplicationWindow {
         minesFoundLabel.text = minesFoundText + minesFound
     }
 
+    Loader {
+        id: pauseDialogLoader
+        source: "PauseDialog.qml"
+        active: false
+    }
+
+    Connections {
+        target: pauseDialogLoader.item
+        onAccepted: {
+            gameTimer.start()
+            pauseDialogLoader.active = false
+        }
+    }
+
     menuBar: Cntrls.MenuBar {
         Cntrls.Menu {
             title: "Controls"
@@ -43,9 +57,8 @@ Cntrls.ApplicationWindow {
                 text: "Pause"
                 shortcut: "Space"
                 onTriggered: {
-                    var pauseDialog = Qt.createComponent("PauseDialog.qml")
-                    var pauseWindow = pauseDialog.createObject(mainWindow)
-                    pauseWindow.show()
+                    gameTimer.stop()
+                    pauseDialogLoader.active = true
                 }
             }
 

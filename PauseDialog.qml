@@ -3,18 +3,15 @@ import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
 
 Dialog {
+    id: pauseDialog
     visible: true
     title: "Pause"
-    modality: Qt.WindowModal
+    modality: Qt.ApplicationModal
+    width: 100
+    height: 100
 
-    contentItem: Rectangle {
-        color: "lightskyblue"
-        implicitWidth: 400
-        implicitHeight: 100
-        Text {
-            text: "Game is paused!"
-            color: "navy"
-            anchors.centerIn: parent
-        }
+    Text {
+        anchors.centerIn: parent
+        text: qsTr("Game is paused!")
     }
 }
