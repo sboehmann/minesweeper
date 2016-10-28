@@ -7,8 +7,8 @@ import "minesweeper.js" as Minesweeper
 Window {
     id: window
     visible: true
-    width: 680
-    height: 480
+    width: 500
+    height: 680
     title: qsTr("Minesweeper")
 
     Image {
@@ -56,10 +56,29 @@ Window {
                 font.pixelSize: 15
                 color: "white"
             }
+        }
+        RowLayout {
+            id: resizeReset
+            anchors.top: infoBar.bottom
+            anchors.margins: 10
+            Ctrl14.Label {
+                text: "Feldgröße (quadr.):"
+                font.pixelSize: 15
+                color: "white"
+            }
+
+            Ctrl14.SpinBox {
+                id: dimension
+                value: Minesweeper.dimension
+                minimumValue: 6
+                maximumValue: 12
+            }
+
             Ctrl14.Button {
                 id: resetButton
                 text: "Reset"
                 onClicked: {
+                    timerArea.gameDuration = 0
                     Minesweeper.dimension = dimension.value
                     Minesweeper.mines = Minesweeper.initMinesweeper()
                     table.columns = Minesweeper.dimension
@@ -69,41 +88,44 @@ Window {
                     numBombsNum.text = Minesweeper.mines.length
                 }
             }
-            Ctrl14.SpinBox {
-                id: dimension
-                minimumValue: 6
-                maximumValue: 12
-            }
+        }
 
-            RowLayout{
-                anchors.top: table.bottom
-                anchors.right: table.right
-                Timer {
-                    id: gameTime
-                    running: true // Warum funktionierte gameTime.start bei Component.onCompleted nicht?
-                    interval: 1000
-                    repeat: true
-                    property int duration: 0
-                    onTriggered: {
-                        if(running){
-                            duration++
-                            gameTimeDisplay.text = duration + " s";
-                        }
+        RowLayout{
+            anchors.top: resizeReset.bottom
+            anchors.margins: 10
+            id: timerArea
+            property alias gameRunning: gameTime.running
+            property alias gameDuration: gameTime.duration
+            Timer {
+                id: gameTime
+                running: true
+                interval: 1000
+                repeat: true
+                property int duration: 0
+                onTriggered: {
+                    if(running){
+                        duration++
+                        gameTimeDisplay.text = duration + " s";
                     }
                 }
-                Ctrl14.Label {
-                    id: gameTimeDisplay
-                    font.pixelSize: 15
-                    text: "noch nix"
-                    color: "yellow"
-                }
-                Ctrl14.Button {
-                    id: pauseBtn
-                    text: "Sleep"
-                    onClicked: {
-                        // das kann nicht richtig sein, denn start/stop geht wegen Threadgrenzen nicht...
-                        gameTime.running = !gameTime.running
-                    }
+            }
+            Ctrl14.Label {
+                font.pixelSize: 15
+                text: "Spieldauer:"
+                color: "yellow"
+            }
+            Ctrl14.Label {
+                id: gameTimeDisplay
+                font.pixelSize: 15
+                text: "0 s"
+                color: "yellow"
+            }
+            Ctrl14.Button {
+                id: pauseBtn
+                text: "Sleep"
+                onClicked: {
+                    // das kann nicht richtig sein, denn start/stop geht wegen Threadgrenzen nicht...
+                    gameTime.running = !gameTime.running
                 }
             }
         }
