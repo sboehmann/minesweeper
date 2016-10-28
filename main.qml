@@ -2,6 +2,7 @@ import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.4 as Ctrl14
+import QtQuick.Dialogs 1.2
 import "minesweeper.js" as Minesweeper
 
 Window {
@@ -10,6 +11,24 @@ Window {
     width: 500 // todo
     height: 680 // todo
     title: qsTr("Minesweeper")
+
+    Dialog  {
+        id: lostDialog
+        visible: false
+        title: "oops"
+
+        contentItem: Rectangle {
+            color: white
+            Text {
+                text: "Kawumm! Verloren."
+                font.pixelSize: 15
+            }
+            implicitHeight: 50
+        }
+        onVisibilityChanged: {
+            timerArea.gameRunning = false
+        }
+    }
 
     Image {
         id: background
@@ -37,7 +56,7 @@ Window {
                     height: width
                     position: modelData
                     Component.onCompleted: {
-                        lost.connect(resetButton.clicked)
+                        lost.connect(lostDialog.open)
                     }
                 }
             }
@@ -89,6 +108,7 @@ Window {
                     allButtons.model = 0
                     allButtons.model = Minesweeper.dimension * Minesweeper.dimension
                     numBombsNum.text = Minesweeper.mines.length
+                    timerArea.gameRunning = true
                 }
             }
         }
