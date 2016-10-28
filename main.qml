@@ -7,8 +7,8 @@ import "minesweeper.js" as Minesweeper
 Window {
     id: window
     visible: true
-    width: 500
-    height: 680
+    width: 500 // todo
+    height: 680 // todo
     title: qsTr("Minesweeper")
 
     Image {
@@ -20,6 +20,7 @@ Window {
     }
 
     ColumnLayout {
+        id: mainLayout
         anchors.top: parent.top
         anchors.left: parent.left
         Grid {            
@@ -31,11 +32,13 @@ Window {
             Repeater {
                 id: allButtons
                 model: Minesweeper.dimension *  Minesweeper.dimension
-
                 Button {
                     width: Math.max(16, (Math.min(window.width, window.height) / table.columns) - 8)
                     height: width
                     position: modelData
+                    Component.onCompleted: {
+                        lost.connect(resetButton.clicked)
+                    }
                 }
             }
         }
@@ -115,6 +118,7 @@ Window {
                 color: "yellow"
             }
             Ctrl14.Label {
+                // wäre schön, wenn dessen Größe nicht springen würde
                 id: gameTimeDisplay
                 font.pixelSize: 15
                 text: "0 s"

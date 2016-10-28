@@ -7,6 +7,7 @@ import QtQml.StateMachine 1.0 as SMF
 import "minesweeper.js" as Minesweeper
 
 Item {
+    signal lost()
     property int position: 0
 
     property alias backgroundColor : background.color
@@ -144,7 +145,7 @@ Item {
                 }
 
                 running: false
-                loops: Animation.Infinite
+                // loops: Animation.Infinite
             }
 
             onEntered: {
@@ -152,7 +153,7 @@ Item {
                 text.color = explodedStateColor
                 background.opacity = explodedStateOpacity
                 explodeStateAnimator.running = true
-
+                lost()
             }
         }
 
@@ -166,6 +167,7 @@ Item {
                 background.opacity = p.explosiveSiblingCount === 0 ? 0.25 : 0.5
             }
         }
+
     }
 
     Rectangle {
