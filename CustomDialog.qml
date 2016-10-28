@@ -46,7 +46,20 @@ Rectangle {
               target: dialogBox
               color: "red"
           }
+        },
+        State {
+          name: "win"
+          PropertyChanges {
+              target: dialogMsg
+              color: "white"
+              text: qsTr("You win!")
+          }
+          PropertyChanges {
+              target: dialogBox
+              color: "green"
+          }
         }
+
 
     ]
 }

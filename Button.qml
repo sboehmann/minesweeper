@@ -116,11 +116,17 @@ Item {
                 text.text = qsTr("\u2691")
                 text.color = flagStateColor
                 background.opacity = flagStateOpacity
-                minesFound += 1
+                flagsSet += 1
+                if(p.isExplosive) {
+                    minesFound += 1
+                }
             }
 
             onExited: {
-                minesFound -= 1
+                flagsSet -= 1
+                if(p.isExplosive) {
+                    minesFound -= 1
+                }
             }
 
             SMF.SignalTransition {
@@ -231,7 +237,8 @@ Item {
             p.isRightButton = mouse.button == Qt.RightButton
 
             if(mouse.button === Qt.MiddleButton) {
-                console.log("Middle mouse is clicked!")
+                //console.log("Middle mouse is clicked!")
+                console.log(Minesweeper.mines)
             }
         }
     }

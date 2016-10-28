@@ -1,6 +1,6 @@
 .pragma library
 
-var dimension = 8;
+var dimension = 3;
 var mines = (function() { return initMinesweeper(); })();
 
 function getNumberOfMines() {
@@ -17,7 +17,8 @@ function randomInt(min, max) {
 
 function initMinesweeper() {
     var mines = [];
-    var count = randomInt(1, dimension * dimension / 2);
+    //var count = randomInt(1, dimension * dimension / 2);
+    var count = 1;
     while(mines.length < count) {
         var idx = randomInt(0, dimension * dimension - 1);
         if(mines.indexOf(idx) === -1) {

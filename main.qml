@@ -13,13 +13,22 @@ Cntrls.ApplicationWindow {
     height: 500
     title: qsTr("Minesweeper")
 
-    property int minesFound: 0
+    property int minesFound: GlobalData.minesFound
+    property int flagsSet: GlobalData.flagsSet
     property bool isGameOver: GlobalData.isGameOver
-    property string minesFoundText: qsTr("Mines Found: ")
+    property string flagsSetText: qsTr("Flags Set: ")
     property string minesExistText: qsTr("Mines Exist: ")
 
+    onFlagsSetChanged: {
+        flagsSetLabel.text = flagsSetText + flagsSet
+    }
+
     onMinesFoundChanged: {
-        minesFoundLabel.text = minesFoundText + minesFound
+        if(minesFound === Minesweeper.mines.length) {
+            gameTimer.stop()
+            customDialog.state = "win"
+            customDialog.visible = true
+        }
     }
 
     onIsGameOverChanged: {
@@ -46,6 +55,7 @@ Cntrls.ApplicationWindow {
 
                     // reset minefield
                     minesFound = 0;
+                    flagsSet = 0;
                     Minesweeper.setMines();
 
                     GlobalData.isGameOver = false;
@@ -128,8 +138,8 @@ Cntrls.ApplicationWindow {
                 text: minesExistText + Minesweeper.getNumberOfMines()
             }
             Cntrls.Label {
-                id: minesFoundLabel
-                text: minesFoundText + "0"
+                id: flagsSetLabel
+                text: flagsSetText + "0"
             }
         }
     }
