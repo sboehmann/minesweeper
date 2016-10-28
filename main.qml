@@ -18,7 +18,6 @@ Window {
         title: "oops"
 
         contentItem: Rectangle {
-            color: white
             Text {
                 text: "Kawumm! Verloren."
                 font.pixelSize: 15
