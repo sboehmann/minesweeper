@@ -31,6 +31,7 @@ Item {
 
         property bool isRightButton: true
         property bool isExplosive: Minesweeper.isExplosivePosition(position)
+        property bool isCellForCascadeOpen: Minesweeper.isCellForCascadeOpen(position)
         property int explosiveSiblingCount: Minesweeper.explosiveSiblingCount(position)
 
         function siblingCountButtonTextColor()
@@ -90,6 +91,12 @@ Item {
                 targetState: finalState
                 signal: mousearea.onClicked
                 guard: !p.isRightButton && !p.isExplosive;
+            }
+
+
+            SMF.SignalTransition {
+                targetState: finalState
+                signal: jumpToFinalState
             }
         }
 
@@ -237,10 +244,17 @@ Item {
             p.isRightButton = mouse.button == Qt.RightButton
 
             if(mouse.button === Qt.MiddleButton) {
-                //console.log("Middle mouse is clicked!")
-                console.log(Minesweeper.mines)
+                redrawMinefield(position)
             }
         }
+    }
+
+    signal redrawMinefield(int position)
+    signal jumpToFinalState()
+
+    function openCell(posToOpen) {
+        if (position !== posToOpen) return
+        jumpToFinalState()
     }
 
     ParallelAnimation {
@@ -267,5 +281,5 @@ Item {
         }
     }
 
-    Component.onCompleted: startupAnimation.start()
+//    Component.onCompleted: startupAnimation.start()
 }

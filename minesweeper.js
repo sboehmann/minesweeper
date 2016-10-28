@@ -3,6 +3,7 @@
 var dimension = 3;
 var numberOfMines = 1;
 var mines = (function() { return initMinesweeper(); })();
+var cascadeOpenCells = [];
 
 function getNumberOfMines() {
     return mines.length
@@ -28,6 +29,10 @@ function initMinesweeper() {
     }
 
     return mines;
+}
+
+function isCellForCascadeOpen(position) {
+    return cascadeOpenCells.indexOf(position) >= 0
 }
 
 function isExplosivePosition(position) {

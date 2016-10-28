@@ -19,6 +19,16 @@ Cntrls.ApplicationWindow {
     property string flagsSetText: qsTr("Flags Set: ")
     property string minesExistText: qsTr("Mines Exist: ")
 
+    function updateMinefield(position) {
+        console.log(Minesweeper.mines)
+        var cascadeOpenCells = [0, 1, 2] //TODO: insert genial cascade open algorithm here!
+        for(var i = 0; i < cascadeOpenCells.length; i++) {
+            openCell(cascadeOpenCells[i])
+        }
+    }
+
+    signal openCell(int position)
+
     function restartGame() {
         if (customDialog.visible) {
             customDialog.state = "default"
@@ -26,19 +36,18 @@ Cntrls.ApplicationWindow {
         }
 
         // reset minefield
-        minesFound = 0;
-        flagsSet = 0;
-        Minesweeper.setMines();
+        minesFound = 0
+        flagsSet = 0
+        Minesweeper.setMines()
 
-        // redraw mineField
         table.columns = Minesweeper.dimension
         table.rows = table.columns
-        mineField.model = 0;
-        mineField.model = Minesweeper.dimension * Minesweeper.dimension;
+        mineField.model = 0
+        mineField.model = Minesweeper.dimension * Minesweeper.dimension
 
-        GlobalData.isGameOver = false;
-        gameTimer.timestamp = 0;
-        minesExistLabel.text = minesExistText + Minesweeper.getNumberOfMines();
+        GlobalData.isGameOver = false
+        gameTimer.timestamp = 0
+        minesExistLabel.text = minesExistText + Minesweeper.getNumberOfMines()
     }
 
     onFlagsSetChanged: {
@@ -133,6 +142,13 @@ Cntrls.ApplicationWindow {
                 width: Math.max(16, (Math.min(mainWindow.width, mainWindow.height) / table.columns) - 8)
                 height: width
                 position: modelData
+
+                onRedrawMinefield: updateMinefield(position)
+
+                Connections {
+                    target: mainWindow
+                    onOpenCell: openCell(position)
+                }
             }
         }
     }
