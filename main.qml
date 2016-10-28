@@ -19,6 +19,28 @@ Cntrls.ApplicationWindow {
     property string flagsSetText: qsTr("Flags Set: ")
     property string minesExistText: qsTr("Mines Exist: ")
 
+    function restartGame() {
+        if (customDialog.visible) {
+            customDialog.state = "default"
+            customDialog.visible = false
+        }
+
+        // reset minefield
+        minesFound = 0;
+        flagsSet = 0;
+        Minesweeper.setMines();
+
+        // redraw mineField
+        table.columns = Minesweeper.dimension
+        table.rows = table.columns
+        mineField.model = 0;
+        mineField.model = Minesweeper.dimension * Minesweeper.dimension;
+
+        GlobalData.isGameOver = false;
+        gameTimer.timestamp = 0;
+        minesExistLabel.text = minesExistText + Minesweeper.getNumberOfMines();
+    }
+
     onFlagsSetChanged: {
         flagsSetLabel.text = flagsSetText + flagsSet
     }
@@ -44,31 +66,18 @@ Cntrls.ApplicationWindow {
             title: "Controls"
             Cntrls.MenuItem {
                 text: "Restart"
-                onTriggered: {
-                    // hide custom dialog, in case of game over
-                    customDialog.state = "default"
-                    customDialog.visible = false
-
-                    // redraw mineField
-                    mineField.model = 0;
-                    mineField.model = Minesweeper.dimension * Minesweeper.dimension;
-
-                    // reset minefield
-                    minesFound = 0;
-                    flagsSet = 0;
-                    Minesweeper.setMines();
-
-                    GlobalData.isGameOver = false;
-                    gameTimer.timestamp = 0;
-                    minesExistLabel.text = minesExistText + Minesweeper.getNumberOfMines();
-                }
+                onTriggered: restartGame()
             }
 
             Cntrls.MenuItem {
                 text: "Pause"
                 shortcut: "Space"
                 onTriggered: {
-                    if(customDialog.state === "gameover") return
+                    if((customDialog.state !== "default") &&
+                            (customDialog.state !== "pause")) {
+                        return
+                    }
+
                     customDialog.state = "pause"
                     customDialog.visible = !customDialog.visible
                     if(customDialog.visible) {
@@ -84,6 +93,18 @@ Cntrls.ApplicationWindow {
                 text: "Quit"
                 shortcut: "Ctrl+Q"
                 onTriggered: { Qt.quit() }
+            }
+        }
+
+        Cntrls.Menu {
+            title: "Tools"
+
+            Cntrls.MenuItem {
+                text: "Settings"
+                shortcut: "Ctrl+S"
+                onTriggered: {
+                    settingsDialog.visible = true
+                }
             }
         }
 
@@ -146,6 +167,12 @@ Cntrls.ApplicationWindow {
 
     CustomDialog {
         id: customDialog
+        visible: false
+        anchors.fill: parent
+    }
+
+    SettingsDialog {
+        id: settingsDialog
         visible: false
         anchors.fill: parent
     }

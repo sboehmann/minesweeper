@@ -6,6 +6,7 @@ import QtQuick.Window 2.0
 Rectangle {
     id: dialogBox
     opacity: 0.7
+    state: "default"
     Text {
         id: dialogMsg
         font.pixelSize: 26
@@ -14,9 +15,7 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: {
-            mouse.accepted = true
-        }
+        propagateComposedEvents: false
     }
 
     states: [

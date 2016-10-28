@@ -5,4 +5,5 @@ QtObject {
     property bool isGameOver: false
     property int minesFound: 0
     property int flagsSet: 0
+    property int dimensions
 }

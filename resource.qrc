@@ -8,5 +8,6 @@
         <file>GlobalData.qml</file>
         <file>qmldir</file>
         <file>CustomDialog.qml</file>
+        <file>SettingsDialog.qml</file>
     </qresource>
 </RCC>
