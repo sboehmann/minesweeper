@@ -1,6 +1,6 @@
 .pragma library
 
-var dimension = 9;
+var dimension = 6;
 var mines = (function() { return initMinesweeper(); })();
 
 function randomInt(min, max) {
