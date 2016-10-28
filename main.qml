@@ -62,14 +62,11 @@ Window {
                 onClicked: {
                     Minesweeper.dimension = dimension.value
                     Minesweeper.mines = Minesweeper.initMinesweeper()
-
                     table.columns = Minesweeper.dimension
                     table.rows = Minesweeper.dimension
-
                     allButtons.model = 0
                     allButtons.model = Minesweeper.dimension * Minesweeper.dimension
                     numBombsNum.text = Minesweeper.mines.length
-
                 }
             }
             Ctrl14.SpinBox {
@@ -77,6 +74,38 @@ Window {
                 minimumValue: 6
                 maximumValue: 12
             }
+
+            RowLayout{
+                anchors.top: table.bottom
+                anchors.right: table.right
+                Timer {
+                    id: gameTime
+                    running: true // Warum funktionierte gameTime.start bei Component.onCompleted nicht?
+                    interval: 1000
+                    repeat: true
+                    property int duration: 0
+                    onTriggered: {
+                        if(running){
+                            duration++
+                            gameTimeDisplay.text = duration + " s";
+                        }
+                    }
+                }
+                Ctrl14.Label {
+                    id: gameTimeDisplay
+                    font.pixelSize: 15
+                    text: "noch nix"
+                    color: "yellow"
+                }
+                Ctrl14.Button {
+                    id: pauseBtn
+                    text: "Sleep"
+                    onClicked: {
+                        // das kann nicht richtig sein, denn start/stop geht wegen Threadgrenzen nicht...
+                        gameTime.running = !gameTime.running
+                    }
+                }
+            }
         }
-    }
+    }    
 }
