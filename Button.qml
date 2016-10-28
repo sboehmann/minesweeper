@@ -244,12 +244,12 @@ Item {
             p.isRightButton = mouse.button == Qt.RightButton
 
             if(mouse.button === Qt.MiddleButton) {
-                redrawMinefield(position)
+                cascadeOpenCells(position)
             }
         }
     }
 
-    signal redrawMinefield(int position)
+    signal cascadeOpenCells(int startPosition)
     signal jumpToFinalState()
 
     function openCell(posToOpen) {

@@ -19,7 +19,7 @@ Cntrls.ApplicationWindow {
     property string flagsSetText: qsTr("Flags Set: ")
     property string minesExistText: qsTr("Mines Exist: ")
 
-    function updateMinefield(position) {
+    function openCells(position) {
         console.log(Minesweeper.mines)
         var cascadeOpenCells = [0, 1, 2] //TODO: insert genial cascade open algorithm here!
         for(var i = 0; i < cascadeOpenCells.length; i++) {
@@ -143,7 +143,7 @@ Cntrls.ApplicationWindow {
                 height: width
                 position: modelData
 
-                onRedrawMinefield: updateMinefield(position)
+                onCascadeOpenCells: openCells(position)
 
                 Connections {
                     target: mainWindow
