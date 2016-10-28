@@ -22,14 +22,15 @@ Window {
     ColumnLayout {
         anchors.top: parent.top
         anchors.left: parent.left
-        Grid {
+        Grid {            
             id: table
             columns: Minesweeper.dimension
-            rows: columns
+            rows: Minesweeper.dimension
             anchors.centerIn: parent
 
             Repeater {
-                model: table.rows *  table.columns
+                id: allButtons
+                model: Minesweeper.dimension *  Minesweeper.dimension
 
                 Button {
                     width: Math.max(16, (Math.min(window.width, window.height) / table.columns) - 8)
@@ -54,6 +55,27 @@ Window {
                 text: Minesweeper.mines.length
                 font.pixelSize: 15
                 color: "white"
+            }
+            Ctrl14.Button {
+                id: resetButton
+                text: "Reset"
+                onClicked: {
+                    Minesweeper.dimension = dimension.value
+                    Minesweeper.mines = Minesweeper.initMinesweeper()
+
+                    table.columns = Minesweeper.dimension
+                    table.rows = Minesweeper.dimension
+
+                    allButtons.model = 0
+                    allButtons.model = Minesweeper.dimension * Minesweeper.dimension
+                    numBombsNum.text = Minesweeper.mines.length
+
+                }
+            }
+            Ctrl14.SpinBox {
+                id: dimension
+                minimumValue: 6
+                maximumValue: 12
             }
         }
     }

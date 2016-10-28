@@ -99,7 +99,7 @@ Item {
             }
 
             SMF.SignalTransition {
-                targetState: startState
+                targetState: finalState
                 signal: mousearea.onClicked
                 guard: p.isRightButton
             }

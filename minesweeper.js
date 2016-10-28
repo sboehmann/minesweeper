@@ -1,6 +1,6 @@
 .pragma library
 
-var dimension = 8;
+var dimension = 9;
 var mines = (function() { return initMinesweeper(); })();
 
 function randomInt(min, max) {
@@ -16,7 +16,6 @@ function initMinesweeper() {
             mines.push(idx);
         }
     }
-
     return mines;
 }
 
