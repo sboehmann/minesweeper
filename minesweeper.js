@@ -19,7 +19,10 @@ function initMinesweeper() {
     var mines = [];
     var count = randomInt(1, dimension * dimension / 2);
     while(mines.length < count) {
-        mines.push(randomInt(0, dimension * dimension - 1));
+        var idx = randomInt(0, dimension * dimension - 1);
+        if(mines.indexOf(idx) === -1) {
+            mines.push(idx);
+        }
     }
 
     return mines;
@@ -54,7 +57,7 @@ function explosiveSiblingCount(position) {
     count += rightNeighborhood(position);
 
     // check cells above this one
-    if(position > dimension) {
+    if(position >= dimension) {
         count += isExplosivePosition(position - dimension) ? 1 : 0;
         count += leftNeighborhood(position - dimension);
         count += rightNeighborhood(position - dimension);
