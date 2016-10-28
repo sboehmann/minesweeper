@@ -100,9 +100,21 @@ Item {
             }
 
             SMF.SignalTransition {
+                targetState: explodeState
+                signal: mousearea.onClicked
+                guard: !p.isRightButton && p.isExplosive;
+            }
+
+            SMF.SignalTransition {
                 targetState: finalState
                 signal: mousearea.onClicked
-                guard: p.isRightButton
+                guard: !p.isRightButton && !p.isExplosive;
+            }
+
+            SMF.SignalTransition {
+                targetState: startState
+                signal: mousearea.onClicked
+                guard: p.isRightButton;
             }
         }
 
