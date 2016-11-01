@@ -19,19 +19,34 @@ Item {
     property real questionStateOpacity : 0.7
     property color questionStateColor : "blue"
 
+    property real bombStateOpacity : 0.7
+    property color bombStateColor : "blue"
+
     property real explodedStateOpacity : 0.6
     property color explodedStateColor : "darkred"
+
+    signal clicked()
+    signal markedAsBomb()
+    signal unmarkedAsBomb()
+    signal noBombsNearby(int position)
+    signal revealed()
 
     QtObject {
         id: p;
 
         property bool isRightButton: true;
-        property bool isExplosive: Minesweeper.isExplosivePosition(position);
-        property int explosiveSiblingCount: Minesweeper.explosiveSiblingCount(position);
+
+        function isExplosivePosition(position) {
+            return Minesweeper.isExplosivePosition(position);
+        }
+
+        function explosiveSiblingCount(position) {
+            return Minesweeper.explosiveSiblingCount(position);
+        }
 
         function siblingCountButtonTextColor()
         {
-            switch(explosiveSiblingCount) {
+            switch(Minesweeper.explosiveSiblingCount(position)) {
             case 1:
                 return "blue";
             case 2:
@@ -71,7 +86,7 @@ Item {
             }
 
             SMF.SignalTransition {
-                targetState: questionState
+                targetState: bombState
                 signal: mousearea.onClicked
                 guard: p.isRightButton
             }
@@ -79,13 +94,39 @@ Item {
             SMF.SignalTransition {
                 targetState: explodeState
                 signal: mousearea.onClicked
-                guard: !p.isRightButton && p.isExplosive;
+                guard: !p.isRightButton && p.isExplosivePosition(position)
             }
 
             SMF.SignalTransition {
                 targetState: finalState
                 signal: mousearea.onClicked
-                guard: !p.isRightButton && !p.isExplosive;
+                guard: !p.isRightButton && !p.isExplosivePosition(position)
+            }
+
+            SMF.SignalTransition {
+                targetState: finalState
+                signal: revealed
+            }
+        }
+
+        SMF.State {
+            id: bombState
+
+            onEntered: {
+                text.text = qsTr("\uD83D\uDCA3")
+                text.color = bombStateColor
+                background.opacity = bombStateOpacity
+                markedAsBomb()
+            }
+
+            onExited: {
+                unmarkedAsBomb()
+            }
+
+            SMF.SignalTransition {
+                targetState: questionState
+                signal: mousearea.onClicked
+                guard: p.isRightButton
             }
         }
 
@@ -152,7 +193,6 @@ Item {
                 text.color = explodedStateColor
                 background.opacity = explodedStateOpacity
                 explodeStateAnimator.running = true
-
             }
         }
 
@@ -160,10 +200,14 @@ Item {
             id: finalState
 
             onEntered: {
-                text.text = p.explosiveSiblingCount
-                text.visible = p.explosiveSiblingCount > 0
+                text.text = Minesweeper.explosiveSiblingCount(position)
+                text.visible = Minesweeper.explosiveSiblingCount(position) > 0
                 text.color = p.siblingCountButtonTextColor()
-                background.opacity = p.explosiveSiblingCount === 0 ? 0.25 : 0.5
+                background.opacity = Minesweeper.explosiveSiblingCount(position) === 0 ? 0.25 : 0.5
+
+                if (Minesweeper.explosiveSiblingCount(position) === 0) {
+                    noBombsNearby(position);
+                }
             }
         }
     }
@@ -204,6 +248,7 @@ Item {
 
         onClicked: {
             p.isRightButton = mouse.button == Qt.RightButton
+            parent.clicked()
         }
     }
 

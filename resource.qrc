@@ -2,8 +2,10 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>minesweeper.js</file>
-        <file>Button.qml</file>
+        <file>Tile.qml</file>
         <file>minesweeper.png</file>
         <file>bg.png</file>
+        <file>Clock.qml</file>
+        <file>BombCounter.qml</file>
     </qresource>
 </RCC>
