@@ -20,7 +20,7 @@ Cntrls.ApplicationWindow {
     property string minesExistText: qsTr("Mines Exist: ")
 
     function openCells(position) {
-        console.log(Minesweeper.mines)
+//        console.log(Minesweeper.mines)
         var cascadeOpenCells = Minesweeper.getCellsToOpen(position)
         for(var i = 0; i < cascadeOpenCells.length; i++) {
             openCell(cascadeOpenCells[i])
