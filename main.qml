@@ -21,7 +21,7 @@ Cntrls.ApplicationWindow {
 
     function openCells(position) {
         console.log(Minesweeper.mines)
-        var cascadeOpenCells = [0, 1, 2] //TODO: insert genial cascade open algorithm here!
+        var cascadeOpenCells = Minesweeper.getCellsToOpen(position)
         for(var i = 0; i < cascadeOpenCells.length; i++) {
             openCell(cascadeOpenCells[i])
         }

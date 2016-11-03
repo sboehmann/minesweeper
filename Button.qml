@@ -98,6 +98,11 @@ Item {
                 targetState: finalState
                 signal: jumpToFinalState
             }
+
+            SMF.SignalTransition {
+                targetState: explodeState
+                signal: jumpToExplodeState
+            }
         }
 
         SMF.State {
@@ -251,10 +256,15 @@ Item {
 
     signal cascadeOpenCells(int startPosition)
     signal jumpToFinalState()
+    signal jumpToExplodeState()
 
     function openCell(posToOpen) {
         if (position !== posToOpen) return
-        jumpToFinalState()
+        if (p.isExplosive) {
+            jumpToExplodeState()
+        } else {
+            jumpToFinalState()
+        }
     }
 
     ParallelAnimation {

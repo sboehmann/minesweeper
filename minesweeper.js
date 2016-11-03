@@ -80,3 +80,45 @@ function explosiveSiblingCount(position) {
     return count;
 }
 
+function getCellsToOpen(position) {
+    if (isExplosivePosition(position)) {
+      return [position];
+    }
+
+    var cellPositions = [position];
+    function openCellsRecursively(idx) {
+        if (idx > cellPositions.length - 1) {
+            return
+        }
+
+        var x = cellPositions[idx] % dimension;
+        var y = cellPositions[idx] / dimension >> 0; //integer division
+        var shifts = [-1 , 0, 1];
+        var len = shifts.length;
+        for (var i = 0; i < len; i++) {
+            var shiftedX = x + shifts[i];
+            if (shiftedX < 0 || shiftedX > dimension - 1) continue;
+            for (var j = 0; j < len; j++) {
+                var shiftedY = y + shifts[j];
+                if (shiftedY < 0 || shiftedY > dimension - 1) continue;
+
+                if (shifts[i] === 0 && shifts[j] === 0) continue;
+                var posToCheck = shiftedX + shiftedY * dimension;
+                if (explosiveSiblingCount(posToCheck) === 0 &&
+                        !isExplosivePosition(posToCheck)) {
+
+                    if (cellPositions.indexOf(posToCheck) === -1) {
+                        cellPositions.push(posToCheck);
+                    }
+
+                }
+            }
+        }
+        openCellsRecursively(idx + 1);
+    }
+    openCellsRecursively(0);
+
+    console.log(cellPositions);
+
+    return cellPositions;
+}
