@@ -5,5 +5,9 @@
         <file>Button.qml</file>
         <file>minesweeper.png</file>
         <file>bg.png</file>
+        <file>GlobalData.qml</file>
+        <file>qmldir</file>
+        <file>CustomDialog.qml</file>
+        <file>SettingsDialog.qml</file>
     </qresource>
 </RCC>

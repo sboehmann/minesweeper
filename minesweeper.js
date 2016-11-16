@@ -1,7 +1,17 @@
 .pragma library
 
-var dimension = 8;
+var dimension = 5;
+var numberOfMines = 4;
 var mines = (function() { return initMinesweeper(); })();
+var cascadeOpenCells = [];
+
+function getNumberOfMines() {
+    return mines.length
+}
+
+function setMines() {
+    mines = initMinesweeper();
+}
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -9,7 +19,8 @@ function randomInt(min, max) {
 
 function initMinesweeper() {
     var mines = [];
-    var count = randomInt(1, dimension * dimension / 2);
+    //var count = randomInt(1, dimension * dimension / 2);
+    var count = numberOfMines;
     while(mines.length < count) {
         var idx = randomInt(0, dimension * dimension - 1);
         if(mines.indexOf(idx) === -1) {
@@ -18,6 +29,10 @@ function initMinesweeper() {
     }
 
     return mines;
+}
+
+function isCellForCascadeOpen(position) {
+    return cascadeOpenCells.indexOf(position) >= 0
 }
 
 function isExplosivePosition(position) {
@@ -65,3 +80,44 @@ function explosiveSiblingCount(position) {
     return count;
 }
 
+function getCellsToOpen(position) {
+    if (isExplosivePosition(position) || explosiveSiblingCount(position) !== 0) {
+      return [position];
+    }
+
+    var cellPositions = [position];
+    function openCellsRecursively(idx) {
+        if (idx > cellPositions.length - 1) {
+            return
+        }
+
+         // this if blocks further openning of cells with numbers
+        if (explosiveSiblingCount(cellPositions[idx]) === 0) {
+            var x = cellPositions[idx] % dimension;
+            var y = cellPositions[idx] / dimension >> 0; //integer division
+            var shifts = [-1 , 0, 1];
+            var len = shifts.length;
+            for (var i = 0; i < len; i++) {
+                var shiftedX = x + shifts[i];
+                if (shiftedX < 0 || shiftedX > dimension - 1) continue;
+                for (var j = 0; j < len; j++) {
+                    var shiftedY = y + shifts[j];
+                    if (shiftedY < 0 || shiftedY > dimension - 1) continue;
+
+                    if (shifts[i] === 0 && shifts[j] === 0) continue;
+                    var posToCheck = shiftedX + shiftedY * dimension;
+                    if (!isExplosivePosition(posToCheck)) { //explosiveSiblingCount(posToCheck) === 0 &&
+
+                        if (cellPositions.indexOf(posToCheck) === -1) {
+                            cellPositions.push(posToCheck);
+                        }
+
+                    }
+                }
+            }
+        }
+        openCellsRecursively(idx + 1);
+    }
+    openCellsRecursively(0);
+    return cellPositions;
+}

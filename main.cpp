@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication::setApplicationName(QStringLiteral("Minesweeper"));
-    QCoreApplication::setApplicationVersion("1.0.0");
+    QCoreApplication::setApplicationVersion("1.0.1");
     QGuiApplication::setApplicationDisplayName(QObject::tr("Minesweeper"));
 
     QGuiApplication app(argc, argv);
